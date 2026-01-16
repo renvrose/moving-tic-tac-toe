@@ -1,6 +1,6 @@
 body {
   font-family: "Poppins", "Segoe UI", Arial, sans-serif;
-  background-color: #c5ae98; /* warm paper brown */
+  background-color: #a8d0e6; /* soft sky blue */
   margin: 0;
   padding: 40px;
   display: flex;
@@ -8,10 +8,10 @@ body {
 }
 
 .game-container {
-  background: #d4b8a5;
+  background-color: #f0f8ff; /* very light, cloudy blue */
   padding: 30px 40px;
   border-radius: 20px;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
   text-align: center;
   max-width: 420px;
   width: 100%;
@@ -20,12 +20,12 @@ body {
 h1 {
   margin-bottom: 8px;
   font-weight: 600;
-  color: #4b3621; /* dark brown */
+  color: #0d3b66; /* deep sea blue */
 }
 
 #status {
   font-size: 20px;
-  color: #6b4f3f;
+  color: #1e6091; /* medium ocean blue */
   margin-bottom: 20px;
 }
 
@@ -41,9 +41,9 @@ h1 {
 .cell {
   width: 100px;
   height: 100px;
-  background-color: #efeaea;
+  background-color: #d0e7f9; /* soft seafoam */
   border-radius: 16px;
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
   font-size: 48px;
   display: flex;
   align-items: center;
@@ -54,25 +54,25 @@ h1 {
 
 .cell:hover {
   transform: translateY(-3px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.18);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
 }
 
 /* PLAYER COLORS */
 .cell.X {
-  color: #6b4f3f; /* brown */
+  color: #05445e; /* dark ocean blue */
 }
 
 .cell.O {
-  color: #a17a5c; /* lighter brown */
+  color: #189ad3; /* bright sky blue */
 }
 
 /* MOVE STATES */
 .selected {
-  outline: 3px solid #d6b98c;
+  outline: 3px solid #75c9e0; /* soft highlight blue */
 }
 
 .valid {
-  background-color: #f1e4d3;
+  background-color: #cdebf9; /* soft, airy blue */
 }
 
 /* RESET BUTTON*/
@@ -81,7 +81,7 @@ h1 {
   padding: 12px 32px;
   border: none;
   border-radius: 25px;
-  background-color: #4b3621;
+  background-color: #05445e; /* dark ocean blue */
   color: #fff;
   font-size: 14px;
   font-weight: 500;
@@ -90,7 +90,7 @@ h1 {
 }
 
 #resetBtn:hover {
-  background-color: #6b4f3f;
+  background-color: #189ad3; /* bright sky blue */
   transform: translateY(-2px);
 }
 
