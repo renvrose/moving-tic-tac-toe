@@ -4,7 +4,7 @@ const status = document.getElementById("status");
 let board = Array(9).fill(null);
 let currentPlayer = "X";
 let selected = null;
-let gameOver = false;
+let gameOver = false; // 🔒 game lock flag
 
 
 const adjacency = {
@@ -23,6 +23,10 @@ function render() {
     div.className = "cell";
     div.textContent = cell || "";
 
+    // 🔹 Add X / O classes for neon styling
+    if (cell === "X") div.classList.add("X");
+    if (cell === "O") div.classList.add("O");
+
     if (i === selected) div.classList.add("selected");
 
     if (
@@ -38,7 +42,10 @@ function render() {
   });
 }
 
+
 function handleClick(i) {
+  if (gameOver) return; // 🚫 block input after win
+
   const pieces = board.filter(c => c === currentPlayer).length;
 
   // Placement phase
@@ -74,6 +81,8 @@ function handleClick(i) {
 function endTurn() {
   if (checkWin()) {
     status.textContent = `🎉 Player ${currentPlayer} wins!`;
+    gameOver = true;   // 🔒 lock game
+    render();
     return;
   }
 
@@ -115,11 +124,11 @@ function resetGame() {
   board = Array(9).fill(null);
   currentPlayer = "X";
   selected = null;
+  gameOver = false; // 🔓 unlock game
   status.textContent = "Player X: place a piece";
   render();
 }
 
 resetBtn.onclick = resetGame;
-
 
 render();
