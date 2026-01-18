@@ -7,7 +7,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const boardSizeSelect = document.getElementById("boardSizeSelect");
   const applySizeBtn = document.getElementById("applySizeBtn");
   const themeBtn = document.getElementById("themeBtn");
-
+  const startBtn = document.getElementById("startBtn");
+  const playAgainBtn = document.getElementById("playAgainBtn");
+  const newSessionBtn = document.getElementById("newSessionBtn");
+  const playerXInput = document.getElementById("playerXInput");
+  const playerOInput = document.getElementById("playerOInput");
+  const scoreboard = document.getElementById("scoreboard");
+  const setup = document.getElementById("setup");
+  const game = document.getElementById("game");
 
   let boardSize = 3;
   let board = Array(boardSize * boardSize).fill(null);
@@ -16,6 +23,29 @@ document.addEventListener("DOMContentLoaded", () => {
   let gameOver = false;
   let winningCells = null;
   let history = [];
+  let maxPieces = boardSize;
+  let winLength = boardSize;
+
+  let playerXName = localStorage.getItem("playerXName") || "Player X";
+  let playerOName = localStorage.getItem("playerOName") || "Player O";
+  let scoreX = parseInt(localStorage.getItem("scoreX")) || 0;
+  let scoreO = parseInt(localStorage.getItem("scoreO")) || 0;
+
+  if (playerXInput) playerXInput.value = playerXName;
+  if (playerOInput) playerOInput.value = playerOName;
+
+  if (game) game.style.display = "none";
+  if (playAgainBtn) playAgainBtn.style.display = "none";
+  if (newSessionBtn) newSessionBtn.style.display = "none";
+
+  function updateScoreboard() {
+    if (!scoreboard) return;
+    scoreboard.textContent = `${playerXName}: ${scoreX} | ${playerOName}: ${scoreO}`;
+    localStorage.setItem("scoreX", scoreX);
+    localStorage.setItem("scoreO", scoreO);
+  }
+
+  updateScoreboard();
 
   function getAdjacency(i) {
     const adj = [];
@@ -31,6 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function render() {
     grid.style.gridTemplateColumns = `repeat(${boardSize}, 1fr)`;
     grid.innerHTML = "";
+
     board.forEach((cell, i) => {
       const div = document.createElement("div");
       div.className = "cell";
@@ -55,9 +86,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function handleClick(i) {
     if (gameOver) return;
+
     const pieces = board.filter(c => c === currentPlayer).length;
 
-    if (pieces < boardSize) {
+    // Placement phase
+    if (pieces < maxPieces) {
       if (board[i] === null) {
         history.push([...board]);
         board[i] = currentPlayer;
@@ -66,13 +99,15 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
+    // Select piece
     if (board[i] === currentPlayer) {
       selected = i;
-      status.textContent = `Player ${currentPlayer}: select a destination`;
+      status.textContent = `${currentPlayer === "X" ? playerXName : playerOName}: select a destination`;
       render();
       return;
     }
 
+    // Move piece
     if (selected !== null && board[i] === null && getAdjacency(selected).includes(i)) {
       history.push([...board]);
       board[i] = currentPlayer;
@@ -83,13 +118,21 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function endTurn() {
-    const winningPattern = checkWin();
+    const winPattern = checkWin();
 
-    if (winningPattern) {
-      winningCells = winningPattern;
-      status.textContent = `🎉 Player ${currentPlayer} wins!`;
+    if (winPattern) {
+      winningCells = winPattern;
       gameOver = true;
+
+      const winnerName = currentPlayer === "X" ? playerXName : playerOName;
+      status.textContent = `🎉 ${winnerName} wins!`;
+
+      if (currentPlayer === "X") scoreX++;
+      else scoreO++;
+
+      updateScoreboard();
       render();
+      showEndButtons();
       return;
     }
 
@@ -97,79 +140,57 @@ document.addEventListener("DOMContentLoaded", () => {
     selected = null;
 
     const pieces = board.filter(c => c === currentPlayer).length;
-    if (pieces === boardSize && !hasValidMove(currentPlayer)) {
+
+    if (pieces === maxPieces && !hasValidMove(currentPlayer)) {
       status.textContent = "🤝 It's a draw!";
       gameOver = true;
       render();
+      showEndButtons();
       return;
     }
 
     status.textContent =
-      pieces < boardSize
-        ? `Player ${currentPlayer}: place a piece`
-        : `Player ${currentPlayer}: select a piece to move`;
+      pieces < maxPieces
+        ? `${currentPlayer === "X" ? playerXName : playerOName}: place a piece`
+        : `${currentPlayer === "X" ? playerXName : playerOName}: select a piece to move`;
 
     render();
   }
 
   function checkWin() {
-    const wins = [];
-    // Rows
+    const patterns = [];
+
     for (let r = 0; r < boardSize; r++) {
-      for (let c = 0; c <= boardSize - boardSize; c++) {
-        const pattern = [];
-        for (let i = 0; i < boardSize; i++) {
-          pattern.push(r * boardSize + c + i);
-        }
-        wins.push(pattern);
-      }
-    }
-    // Columns
-    for (let c = 0; c < boardSize; c++) {
-      for (let r = 0; r <= boardSize - boardSize; r++) {
-        const pattern = [];
-        for (let i = 0; i < boardSize; i++) {
-          pattern.push((r + i) * boardSize + c);
-        }
-        wins.push(pattern);
-      }
-    }
-    // Main diagonals
-    for (let r = 0; r <= boardSize - boardSize; r++) {
-      for (let c = 0; c <= boardSize - boardSize; c++) {
-        const pattern = [];
-        for (let i = 0; i < boardSize; i++) {
-          pattern.push((r + i) * boardSize + (c + i));
-        }
-        wins.push(pattern);
-      }
-    }
-    // Anti diagonals
-    for (let r = 0; r <= boardSize - boardSize; r++) {
-      for (let c = boardSize - 1; c >= boardSize - boardSize - 1; c--) {
-        const pattern = [];
-        for (let i = 0; i < boardSize; i++) {
-          pattern.push((r + i) * boardSize + (c - i));
-        }
-        wins.push(pattern);
+      for (let c = 0; c <= boardSize - winLength; c++) {
+        patterns.push([...Array(winLength)].map((_, i) => r * boardSize + c + i));
       }
     }
 
-    for (let pattern of wins) {
-      if (pattern.every(i => board[i] === currentPlayer)) return pattern;
+    for (let c = 0; c < boardSize; c++) {
+      for (let r = 0; r <= boardSize - winLength; r++) {
+        patterns.push([...Array(winLength)].map((_, i) => (r + i) * boardSize + c));
+      }
     }
-    return null;
+
+    for (let r = 0; r <= boardSize - winLength; r++) {
+      for (let c = 0; c <= boardSize - winLength; c++) {
+        patterns.push([...Array(winLength)].map((_, i) => (r + i) * boardSize + (c + i)));
+      }
+    }
+
+    for (let r = 0; r <= boardSize - winLength; r++) {
+      for (let c = winLength - 1; c < boardSize; c++) {
+        patterns.push([...Array(winLength)].map((_, i) => (r + i) * boardSize + (c - i)));
+      }
+    }
+
+    return patterns.find(p => p.every(i => board[i] === currentPlayer)) || null;
   }
 
   function hasValidMove(player) {
-    for (let i = 0; i < board.length; i++) {
-      if (board[i] === player) {
-        for (let adj of getAdjacency(i)) {
-          if (board[adj] === null) return true;
-        }
-      }
-    }
-    return false;
+    return board.some((cell, i) =>
+      cell === player && getAdjacency(i).some(a => board[a] === null)
+    );
   }
 
   function resetGame() {
@@ -179,37 +200,71 @@ document.addEventListener("DOMContentLoaded", () => {
     gameOver = false;
     winningCells = null;
     history = [];
-    status.textContent = "Player X: place a piece";
+
+    status.textContent = `${playerXName}: place a piece`;
+    hideEndButtons();
     render();
   }
 
   function undoMove() {
-    if (history.length === 0) return;
-    const previous = history.pop();
-    board = [...previous];
+    if (!history.length) return;
+    board = history.pop();
     currentPlayer = currentPlayer === "X" ? "O" : "X";
     selected = null;
     winningCells = null;
     gameOver = false;
-    status.textContent =
-      board.filter(c => c === currentPlayer).length < boardSize
-        ? `Player ${currentPlayer}: place a piece`
-        : `Player ${currentPlayer}: select a piece to move`;
     render();
+  }
+
+  function hideEndButtons() {
+    if (playAgainBtn) playAgainBtn.style.display = "none";
+    if (newSessionBtn) newSessionBtn.style.display = "none";
+    if (resetBtn) resetBtn.style.display = "block";
+    if (undoBtn) undoBtn.style.display = "block";
+  }
+
+  function showEndButtons() {
+    if (playAgainBtn) playAgainBtn.style.display = "block";
+    if (newSessionBtn) newSessionBtn.style.display = "block";
+    if (resetBtn) resetBtn.style.display = "none";
+    if (undoBtn) undoBtn.style.display = "none";
   }
 
   function applyBoardSize() {
     const newSize = parseInt(boardSizeSelect.value);
     if (newSize !== boardSize) {
       boardSize = newSize;
+      maxPieces = newSize;
+      winLength = newSize;
       resetGame();
     }
   }
 
-  resetBtn.onclick = resetGame;
-  undoBtn.onclick = undoMove;
-  applySizeBtn.onclick = applyBoardSize;
-  themeBtn.onclick = () => document.body.classList.toggle("dark-mode");
+  if (resetBtn) resetBtn.onclick = resetGame;
+  if (undoBtn) undoBtn.onclick = undoMove;
+  if (applySizeBtn) applySizeBtn.onclick = applyBoardSize;
+  if (themeBtn) themeBtn.onclick = () => document.body.classList.toggle("dark-mode");
+
+  if (startBtn) startBtn.onclick = () => {
+    playerXName = playerXInput.value || "Player X";
+    playerOName = playerOInput.value || "Player O";
+    localStorage.setItem("playerXName", playerXName);
+    localStorage.setItem("playerOName", playerOName);
+
+    setup.style.display = "none";
+    game.style.display = "block";
+    resetGame();
+  };
+
+  if (playAgainBtn) playAgainBtn.onclick = resetGame;
+
+  if (newSessionBtn) newSessionBtn.onclick = () => {
+    scoreX = 0;
+    scoreO = 0;
+    updateScoreboard();
+    game.style.display = "none";
+    setup.style.display = "block";
+  };
 
   render();
 });

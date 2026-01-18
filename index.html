@@ -9,23 +9,34 @@
 
   <div class="game-container">
     <h1>Moving Tic-Tac-Toe</h1>
-    <div class="settings">
-      <label for="boardSizeSelect">Board Size:</label>
-      <select id="boardSizeSelect">
-        <option value="3">3x3</option>
-        <option value="4">4x4</option>
-        <option value="5">5x5</option>
-      </select>
-      <button id="applySizeBtn">Apply</button>
+    <div id="setup" class="setup">
+      <label for="playerXInput">Player X Name:</label>
+      <input type="text" id="playerXInput" placeholder="Enter name" value="Player X">
+      <label for="playerOInput">Player O Name:</label>
+      <input type="text" id="playerOInput" placeholder="Enter name" value="Player O">
+      <button id="startBtn">Start Game</button>
     </div>
-    <button id="themeBtn">🌙 Dark Mode</button>
-    <p id="status">Player X's turn</p>
+    <div id="game">
+      <div id="scoreboard">X: 0 | O: 0</div>
+      <div class="settings">
+        <label for="boardSizeSelect">Board Size:</label>
+        <select id="boardSizeSelect">
+          <option value="3">3x3</option>
+          <option value="4">4x4</option>
+          <option value="5">5x5</option>
+        </select>
+        <button id="applySizeBtn">Apply</button>
+      </div>
+      <button id="themeBtn">🌙 Dark Mode</button>
+      <p id="status">Player X's turn</p>
 
-    <div id="grid" class="grid"></div>
+      <div id="grid" class="grid"></div>
 
-    <button id="resetBtn">Restart Game</button>
-    <button id="undoBtn">Undo</button>
-
+      <button id="resetBtn">Restart Game</button>
+      <button id="undoBtn">Undo</button>
+      <button id="playAgainBtn" class="hidden">Play Again</button>
+      <button id="newSessionBtn" class="hidden">New Session</button>
+    </div>
   </div>
 
   <script src="./src/script.js"></script>
