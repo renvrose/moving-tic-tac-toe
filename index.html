@@ -4,17 +4,28 @@
   <title>Moving Tic Tac Toe</title>
   <link rel="stylesheet" href="./src/style.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
-
 </head>
 <body>
 
   <div class="game-container">
     <h1>Moving Tic-Tac-Toe</h1>
+    <div class="settings">
+      <label for="boardSizeSelect">Board Size:</label>
+      <select id="boardSizeSelect">
+        <option value="3">3x3</option>
+        <option value="4">4x4</option>
+        <option value="5">5x5</option>
+      </select>
+      <button id="applySizeBtn">Apply</button>
+    </div>
+    <button id="themeBtn">🌙 Dark Mode</button>
     <p id="status">Player X's turn</p>
 
     <div id="grid" class="grid"></div>
 
     <button id="resetBtn">Restart Game</button>
+    <button id="undoBtn">Undo</button>
+
   </div>
 
   <script src="./src/script.js"></script>

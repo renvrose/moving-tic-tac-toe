@@ -1,55 +1,86 @@
 body {
   font-family: "Poppins", "Segoe UI", Arial, sans-serif;
-  background-color: #a8d0e6; /* soft sky blue */
+  background-color: var(--bg);
   margin: 0;
   padding: 40px;
   display: flex;
   justify-content: center;
+  transition: background-color 0.3s ease;
 }
 
 .game-container {
-  background-color: #f0f8ff; /* very light, cloudy blue */
+  background-color: var(--container-bg);
   padding: 30px 40px;
   border-radius: 20px;
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
   text-align: center;
   max-width: 420px;
   width: 100%;
+  transition: background-color 0.3s ease;
 }
 
 h1 {
   margin-bottom: 8px;
   font-weight: 600;
-  color: #0d3b66; /* deep sea blue */
+  color: var(--text);
+}
+
+.settings {
+  margin-bottom: 20px;
+}
+
+.settings label {
+  margin-right: 10px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.settings select {
+  padding: 5px;
+  border-radius: 8px;
+  border: 1px solid var(--text);
+  margin-right: 10px;
+}
+
+.settings button {
+  padding: 5px 10px;
+  background-color: var(--button-bg);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.settings button:hover {
+  background-color: var(--button-hover);
 }
 
 #status {
   font-size: 20px;
-  color: #1e6091; /* medium ocean blue */
+  color: var(--text);
   margin-bottom: 20px;
 }
 
 /* GAME GRID */
 #grid {
   display: grid;
-  grid-template-columns: repeat(3, 100px);
   gap: 12px;
   justify-content: center;
   margin: 20px auto;
+  max-width: 500px;
 }
 
 .cell {
-  width: 100px;
-  height: 100px;
-  background-color: #d0e7f9; /* soft seafoam */
+  aspect-ratio: 1;
+  background-color: var(--cell-bg);
   border-radius: 16px;
   box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
-  font-size: 48px;
+  font-size: clamp(24px, 8vw, 48px);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.3s ease;
 }
 
 .cell:hover {
@@ -59,29 +90,37 @@ h1 {
 
 /* PLAYER COLORS */
 .cell.X {
-  color: #05445e; /* dark ocean blue */
+  color: var(--x-color);
 }
 
 .cell.O {
-  color: #189ad3; /* bright sky blue */
+  color: var(--o-color);
 }
 
 /* MOVE STATES */
 .selected {
-  outline: 3px solid #75c9e0; /* soft highlight blue */
+  outline: 3px solid var(--selected-outline);
 }
 
 .valid {
-  background-color: #cdebf9; /* soft, airy blue */
+  background-color: var(--valid-bg);
+  border: 2px solid var(--valid-border);
 }
 
-/* RESET BUTTON*/
-#resetBtn {
+.win {
+  background-color: var(--win-bg);
+  box-shadow: 0 0 15px var(--win-shadow);
+  color: var(--win-text);
+}
+
+/* RESET & UNDO BUTTONS */
+#resetBtn,
+#undoBtn {
   margin-top: 25px;
   padding: 12px 32px;
   border: none;
   border-radius: 25px;
-  background-color: #05445e; /* dark ocean blue */
+  background-color: var(--button-bg);
   color: #fff;
   font-size: 14px;
   font-weight: 500;
@@ -89,11 +128,60 @@ h1 {
   transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
-#resetBtn:hover {
-  background-color: #189ad3; /* bright sky blue */
-  transform: translateY(-2px);
+#resetBtn:hover,
+#undoBtn:hover {
+  background-color: var(--button-hover);
 }
 
-#resetBtn:active {
-  transform: translateY(0);
+#themeBtn {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 10px 15px;
+  background-color: var(--button-bg);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s ease;
+}
+
+#themeBtn:hover {
+  background-color: var(--button-hover);
+}
+
+/* THEME VARIABLES */
+:root {
+  --bg: #a8d0e6;
+  --container-bg: #f0f8ff;
+  --text: #0d3b66;
+  --button-bg: #1e6091;
+  --button-hover: #0d3b66;
+  --cell-bg: #d0e7f9;
+  --x-color: #05445e;
+  --o-color: #189ad3;
+  --selected-outline: #75c9e0;
+  --valid-bg: #d4edda;
+  --valid-border: #87dc9b;
+  --win-bg: #00ffcc;
+  --win-shadow: #00ffcc;
+  --win-text: rgb(196, 117, 117);
+}
+
+.dark-mode {
+  --bg: #121212;
+  --container-bg: #1e1e1e;
+  --text: #ffffff;
+  --button-bg: #333333;
+  --button-hover: #555555;
+  --cell-bg: #2a2a2a;
+  --x-color: #ffffff;
+  --o-color: #ffeb3b;
+  --selected-outline: #ff9800;
+  --valid-bg: #d49516;
+  --valid-border: #bb7d66;
+  --win-bg: #ff5722;
+  --win-shadow: #ff5722;
+  --win-text: #ffffff;
 }
