@@ -28,24 +28,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let playerXName = localStorage.getItem("playerXName") || "Player X";
   let playerOName = localStorage.getItem("playerOName") || "Player O";
-  let scoreX = parseInt(localStorage.getItem("scoreX")) || 0;
-  let scoreO = parseInt(localStorage.getItem("scoreO")) || 0;
+
+  playerXInput.value = playerXName;
+  playerOInput.value = playerOName;
 
   if (playerXInput) playerXInput.value = playerXName;
   if (playerOInput) playerOInput.value = playerOName;
+
+  if (scoreboard) scoreboard.style.display = "none";
 
   if (game) game.style.display = "none";
   if (playAgainBtn) playAgainBtn.style.display = "none";
   if (newSessionBtn) newSessionBtn.style.display = "none";
 
-  function updateScoreboard() {
-    if (!scoreboard) return;
-    scoreboard.textContent = `${playerXName}: ${scoreX} | ${playerOName}: ${scoreO}`;
-    localStorage.setItem("scoreX", scoreX);
-    localStorage.setItem("scoreO", scoreO);
-  }
 
-  updateScoreboard();
 
   function getAdjacency(i) {
     const adj = [];
@@ -127,10 +123,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const winnerName = currentPlayer === "X" ? playerXName : playerOName;
       status.textContent = `🎉 ${winnerName} wins!`;
 
-      if (currentPlayer === "X") scoreX++;
-      else scoreO++;
-
-      updateScoreboard();
       render();
       showEndButtons();
       return;
@@ -259,9 +251,6 @@ document.addEventListener("DOMContentLoaded", () => {
   if (playAgainBtn) playAgainBtn.onclick = resetGame;
 
   if (newSessionBtn) newSessionBtn.onclick = () => {
-    scoreX = 0;
-    scoreO = 0;
-    updateScoreboard();
     game.style.display = "none";
     setup.style.display = "block";
   };
