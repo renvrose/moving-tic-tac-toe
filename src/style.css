@@ -1,10 +1,13 @@
+/* GLOBAL STYLES */
 body {
   font-family: "Poppins", "Segoe UI", Arial, sans-serif;
   background-color: var(--bg);
   margin: 0;
-  padding: 40px;
+  padding: 20px;
   display: flex;
   justify-content: center;
+  align-items: center;
+  min-height: 100vh;
   transition: background-color 0.3s ease;
 }
 
@@ -12,7 +15,7 @@ body {
   background-color: var(--container-bg);
   padding: 30px 40px;
   border-radius: 20px;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
   text-align: center;
   max-width: 420px;
   width: 100%;
@@ -20,13 +23,18 @@ body {
 }
 
 h1 {
-  margin-bottom: 8px;
+  margin-top: 0;
+  margin-bottom: 20px;
   font-weight: 600;
   color: var(--text);
 }
 
+/* SETUP SCREEN */
 .setup {
   margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .setup label {
@@ -34,42 +42,45 @@ h1 {
   margin-bottom: 5px;
   font-weight: 500;
   color: var(--text);
+  width: 100%;
+  text-align: left;
 }
 
 .setup input {
-  padding: 8px;
-  margin-bottom: 10px;
+  padding: 12px;
+  margin-bottom: 15px;
   border-radius: 8px;
-  border: 1px solid var(--text);
-  width: 200px;
+  border: 1px solid #ccc;
+  width: 100%;
+  box-sizing: border-box;
+  font-family: inherit;
 }
 
 .setup button {
-  padding: 10px 20px;
+  padding: 12px 25px;
   background-color: var(--button-bg);
   color: white;
   border: none;
   border-radius: 8px;
   cursor: pointer;
+  font-weight: 500;
+  width: 100%;
 }
 
 .setup button:hover {
   background-color: var(--button-hover);
 }
 
-.hidden {
-  display: none;
-}
-
-#scoreboard {
-  font-size: 18px;
-  font-weight: 500;
-  color: var(--text);
-  margin-bottom: 10px;
+/* GAME SETTINGS */
+.settings {
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
 }
 
 .settings label {
-  margin-right: 10px;
   font-weight: 500;
   color: var(--text);
 }
@@ -77,27 +88,15 @@ h1 {
 .settings select {
   padding: 5px;
   border-radius: 8px;
-  border: 1px solid var(--text);
-  margin-right: 10px;
-}
-
-.settings button {
-  padding: 5px 10px;
-  background-color: var(--button-bg);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-.settings button:hover {
-  background-color: var(--button-hover);
+  border: 1px solid #ccc;
 }
 
 #status {
-  font-size: 20px;
+  font-size: 1.1rem;
+  font-weight: 500;
   color: var(--text);
-  margin-bottom: 20px;
+  margin: 15px 0;
+  min-height: 1.5em;
 }
 
 /* GAME GRID */
@@ -106,57 +105,59 @@ h1 {
   gap: 12px;
   justify-content: center;
   margin: 20px auto;
-  max-width: 500px;
 }
 
 .cell {
   aspect-ratio: 1;
   background-color: var(--cell-bg);
   border-radius: 16px;
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
   font-size: clamp(24px, 8vw, 48px);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  font-weight: 600;
   transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.3s ease;
 }
 
 .cell:hover {
   transform: translateY(-3px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
 }
 
-/* PLAYER COLORS */
-.cell.X {
-  color: var(--x-color);
-}
-
-.cell.O {
-  color: var(--o-color);
-}
+.cell.X { color: var(--x-color); }
+.cell.O { color: var(--o-color); }
 
 /* MOVE STATES */
 .selected {
-  outline: 3px solid var(--selected-outline);
+  outline: 4px solid var(--selected-outline);
+  outline-offset: -4px;
+  transform: scale(0.95);
 }
 
 .valid {
   background-color: var(--valid-bg);
-  border: 2px solid var(--valid-border);
+  border: 2px dashed var(--valid-border);
 }
 
 .win {
-  background-color: var(--win-bg);
-  box-shadow: 0 0 15px var(--win-shadow);
-  color: var(--win-text);
+  background-color: var(--win-bg) !important;
+  box-shadow: 0 0 20px var(--win-shadow);
+  color: var(--win-text) !important;
 }
 
-/* RESET & UNDO BUTTONS */
-#resetBtn,
-#undoBtn {
+/* CONTROLS */
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
   margin-top: 25px;
-  padding: 12px 32px;
+}
+
+#resetBtn, #undoBtn, #playAgainBtn, #newSessionBtn,#applySizeBtn {
+  padding: 10px 20px;
   border: none;
   border-radius: 25px;
   background-color: var(--button-bg);
@@ -164,31 +165,10 @@ h1 {
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.1s ease;
+  transition: background-color 0.2s ease;
 }
 
-#resetBtn:hover,
-#undoBtn:hover {
-  background-color: var(--button-hover);
-}
-
-#playAgainBtn,
-#newSessionBtn {
-  margin-top: 25px;
-  margin-right: 10px;
-  padding: 12px 32px;
-  border: none;
-  border-radius: 25px;
-  background-color: var(--button-bg);
-  color: #fff;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.1s ease;
-}
-
-#playAgainBtn:hover,
-#newSessionBtn:hover {
+#resetBtn:hover, #undoBtn:hover, #playAgainBtn:hover, #newSessionBtn:hover {
   background-color: var(--button-hover);
 }
 
@@ -202,12 +182,7 @@ h1 {
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  font-size: 14px;
-  transition: background-color 0.2s ease;
-}
-
-#themeBtn:hover {
-  background-color: var(--button-hover);
+  z-index: 100;
 }
 
 /* THEME VARIABLES */
@@ -220,28 +195,27 @@ h1 {
   --cell-bg: #d0e7f9;
   --x-color: #05445e;
   --o-color: #189ad3;
-  --selected-outline: #75c9e0;
+  --selected-outline: #38bdf8;
   --valid-bg: #d4edda;
   --valid-border: #87dc9b;
   --win-bg: #00ffcc;
-  --win-shadow: #00ffcc;
-  --win-text: rgb(196, 117, 117);
+  --win-shadow: rgba(0, 255, 204, 0.6);
+  --win-text: #0d3b66;
 }
 
 .dark-mode {
-  --bg: #0f172a;              /* deep navy */
-  --container-bg: #1e293b;    /* slate blue */
-  --text: #e2e8f0;            /* soft white */
-  --button-bg: #0d3d8b;       /* blue accent */
-  --button-hover: #032160;
-  --cell-bg: #334155;         /* muted blue-gray */
-  --x-color: #7dd3fc;         /* light cyan */
-  --o-color: #60a5fa;         /* sky blue */
+  --bg: #0f172a;
+  --container-bg: #1e293b;
+  --text: #e2e8f0;
+  --button-bg: #3b82f6;
+  --button-hover: #2563eb;
+  --cell-bg: #334155;
+  --x-color: #7dd3fc;
+  --o-color: #93c5fd;
   --selected-outline: #38bdf8;
-  --valid-bg: #021e68;
-  --valid-border: #60a5fa;
-  --win-bg: #00aa55;          /* medium green for visibility */
-  --win-shadow: #00aa55;
-  --win-text: #0f172a;        /* dark text for contrast on bright bg */
+  --valid-bg: #1e3a8a;
+  --valid-border: #3b82f6;
+  --win-bg: #10b981;
+  --win-shadow: rgba(16, 185, 129, 0.5);
+  --win-text: #ffffff;
 }
-

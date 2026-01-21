@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-
   const grid = document.getElementById("grid");
   const status = document.getElementById("status");
   const resetBtn = document.getElementById("resetBtn");
@@ -12,7 +11,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const newSessionBtn = document.getElementById("newSessionBtn");
   const playerXInput = document.getElementById("playerXInput");
   const playerOInput = document.getElementById("playerOInput");
-  const scoreboard = document.getElementById("scoreboard");
   const setup = document.getElementById("setup");
   const game = document.getElementById("game");
 
@@ -23,34 +21,31 @@ document.addEventListener("DOMContentLoaded", () => {
   let gameOver = false;
   let winningCells = null;
   let history = [];
-  let maxPieces = boardSize;
-  let winLength = boardSize;
+  let maxPieces = 3; 
+  let winLength = 3;
 
   let playerXName = localStorage.getItem("playerXName") || "Player X";
   let playerOName = localStorage.getItem("playerOName") || "Player O";
 
-  playerXInput.value = playerXName;
-  playerOInput.value = playerOName;
-
   if (playerXInput) playerXInput.value = playerXName;
   if (playerOInput) playerOInput.value = playerOName;
-
-  if (scoreboard) scoreboard.style.display = "none";
-
   if (game) game.style.display = "none";
-  if (playAgainBtn) playAgainBtn.style.display = "none";
-  if (newSessionBtn) newSessionBtn.style.display = "none";
-
-
 
   function getAdjacency(i) {
     const adj = [];
     const row = Math.floor(i / boardSize);
     const col = i % boardSize;
-    if (row > 0) adj.push(i - boardSize);
-    if (row < boardSize - 1) adj.push(i + boardSize);
-    if (col > 0) adj.push(i - 1);
-    if (col < boardSize - 1) adj.push(i + 1);
+
+    for (let dr = -1; dr <= 1; dr++) {
+      for (let dc = -1; dc <= 1; dc++) {
+        if (dr === 0 && dc === 0) continue;
+        const r = row + dr;
+        const c = col + dc;
+        if (r >= 0 && r < boardSize && c >= 0 && c < boardSize) {
+          adj.push(r * boardSize + c);
+        }
+      }
+    }
     return adj;
   }
 
@@ -82,10 +77,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function handleClick(i) {
     if (gameOver) return;
-
     const pieces = board.filter(c => c === currentPlayer).length;
 
-    // Placement phase
     if (pieces < maxPieces) {
       if (board[i] === null) {
         history.push([...board]);
@@ -95,15 +88,13 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // Select piece
     if (board[i] === currentPlayer) {
       selected = i;
-      status.textContent = `${currentPlayer === "X" ? playerXName : playerOName}: select a destination`;
+      status.textContent = `${currentPlayer === "X" ? playerXName : playerOName}: select destination`;
       render();
       return;
     }
 
-    // Move piece
     if (selected !== null && board[i] === null && getAdjacency(selected).includes(i)) {
       history.push([...board]);
       board[i] = currentPlayer;
@@ -119,9 +110,16 @@ document.addEventListener("DOMContentLoaded", () => {
     if (winPattern) {
       winningCells = winPattern;
       gameOver = true;
-
-      const winnerName = currentPlayer === "X" ? playerXName : playerOName;
-      status.textContent = `🎉 ${winnerName} wins!`;
+      status.textContent = `🎉 ${currentPlayer === "X" ? playerXName : playerOName} wins!`;
+      
+      // Trigger Confetti
+      if (typeof confetti === 'function') {
+        confetti({
+          particleCount: 150,
+          spread: 70,
+          origin: { y: 0.6 }
+        });
+      }
 
       render();
       showEndButtons();
@@ -130,52 +128,46 @@ document.addEventListener("DOMContentLoaded", () => {
 
     currentPlayer = currentPlayer === "X" ? "O" : "X";
     selected = null;
+    updateStatusMessage();
+    render();
+  }
 
+  function updateStatusMessage() {
     const pieces = board.filter(c => c === currentPlayer).length;
-
     if (pieces === maxPieces && !hasValidMove(currentPlayer)) {
       status.textContent = "🤝 It's a draw!";
       gameOver = true;
-      render();
       showEndButtons();
       return;
     }
 
-    status.textContent =
-      pieces < maxPieces
-        ? `${currentPlayer === "X" ? playerXName : playerOName}: place a piece`
-        : `${currentPlayer === "X" ? playerXName : playerOName}: select a piece to move`;
-
-    render();
+    status.textContent = pieces < maxPieces
+      ? `${currentPlayer === "X" ? playerXName : playerOName}: place a piece`
+      : `${currentPlayer === "X" ? playerXName : playerOName}: move a piece`;
   }
 
   function checkWin() {
     const patterns = [];
-
     for (let r = 0; r < boardSize; r++) {
       for (let c = 0; c <= boardSize - winLength; c++) {
         patterns.push([...Array(winLength)].map((_, i) => r * boardSize + c + i));
       }
     }
-
     for (let c = 0; c < boardSize; c++) {
       for (let r = 0; r <= boardSize - winLength; r++) {
         patterns.push([...Array(winLength)].map((_, i) => (r + i) * boardSize + c));
       }
     }
-
     for (let r = 0; r <= boardSize - winLength; r++) {
       for (let c = 0; c <= boardSize - winLength; c++) {
         patterns.push([...Array(winLength)].map((_, i) => (r + i) * boardSize + (c + i)));
       }
     }
-
     for (let r = 0; r <= boardSize - winLength; r++) {
       for (let c = winLength - 1; c < boardSize; c++) {
         patterns.push([...Array(winLength)].map((_, i) => (r + i) * boardSize + (c - i)));
       }
     }
-
     return patterns.find(p => p.every(i => board[i] === currentPlayer)) || null;
   }
 
@@ -192,68 +184,74 @@ document.addEventListener("DOMContentLoaded", () => {
     gameOver = false;
     winningCells = null;
     history = [];
-
-    status.textContent = `${playerXName}: place a piece`;
     hideEndButtons();
+    updateStatusMessage();
     render();
   }
 
   function undoMove() {
-    if (!history.length) return;
+    if (!history.length || gameOver) return;
     board = history.pop();
     currentPlayer = currentPlayer === "X" ? "O" : "X";
     selected = null;
-    winningCells = null;
-    gameOver = false;
+    updateStatusMessage();
     render();
+  }
+
+  function applyBoardSize() {
+    boardSize = parseInt(boardSizeSelect.value);
+    maxPieces = boardSize; 
+    winLength = boardSize;
+    resetGame();
   }
 
   function hideEndButtons() {
     if (playAgainBtn) playAgainBtn.style.display = "none";
     if (newSessionBtn) newSessionBtn.style.display = "none";
-    if (resetBtn) resetBtn.style.display = "block";
-    if (undoBtn) undoBtn.style.display = "block";
+    resetBtn.style.display = "inline-block";
+    undoBtn.style.display = "inline-block";
   }
 
   function showEndButtons() {
-    if (playAgainBtn) playAgainBtn.style.display = "block";
-    if (newSessionBtn) newSessionBtn.style.display = "block";
-    if (resetBtn) resetBtn.style.display = "none";
-    if (undoBtn) undoBtn.style.display = "none";
+    if (playAgainBtn) playAgainBtn.style.display = "inline-block";
+    if (newSessionBtn) newSessionBtn.style.display = "inline-block";
+    resetBtn.style.display = "none";
+    undoBtn.style.display = "none";
   }
 
-  function applyBoardSize() {
-    const newSize = parseInt(boardSizeSelect.value);
-    if (newSize !== boardSize) {
-      boardSize = newSize;
-      maxPieces = newSize;
-      winLength = newSize;
+  // FIXED: Restart button now redirects to the setup page
+  if (resetBtn) {
+    resetBtn.onclick = () => {
       resetGame();
-    }
+      game.style.display = "none";
+      setup.style.display = "block";
+    };
   }
 
-  if (resetBtn) resetBtn.onclick = resetGame;
   if (undoBtn) undoBtn.onclick = undoMove;
   if (applySizeBtn) applySizeBtn.onclick = applyBoardSize;
   if (themeBtn) themeBtn.onclick = () => document.body.classList.toggle("dark-mode");
-
-  if (startBtn) startBtn.onclick = () => {
-    playerXName = playerXInput.value || "Player X";
-    playerOName = playerOInput.value || "Player O";
-    localStorage.setItem("playerXName", playerXName);
-    localStorage.setItem("playerOName", playerOName);
-
-    setup.style.display = "none";
-    game.style.display = "block";
-    resetGame();
-  };
-
+  
+  // Play Again stays in the game but resets the board
   if (playAgainBtn) playAgainBtn.onclick = resetGame;
 
-  if (newSessionBtn) newSessionBtn.onclick = () => {
-    game.style.display = "none";
-    setup.style.display = "block";
-  };
+  // New Session goes back to setup
+  if (newSessionBtn) {
+    newSessionBtn.onclick = () => {
+      game.style.display = "none";
+      setup.style.display = "block";
+    };
+  }
 
-  render();
+  if (startBtn) {
+    startBtn.onclick = () => {
+      playerXName = playerXInput.value || "Player X";
+      playerOName = playerOInput.value || "Player O";
+      localStorage.setItem("playerXName", playerXName);
+      localStorage.setItem("playerOName", playerOName);
+      setup.style.display = "none";
+      game.style.display = "block";
+      resetGame();
+    };
+  }
 });
