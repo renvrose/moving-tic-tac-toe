@@ -16,6 +16,6 @@ jobs:
         run: docker build -t tic-tac-toe-test .
 
       - name: Deploy to Render
-        # This uses the secret we will set up in the next step
+        
         run: |
           curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}
