@@ -1,34 +1,31 @@
 {
-  "name": "Team 5 Dev Environment",
+  "name": "Team 5 - Advanced Tic-Tac-Toe Dev",
   "image": "mcr.microsoft.com/devcontainers/javascript-node:20",
   "features": {
-    "ghcr.io/devcontainers/features/docker-in-docker:2": {},
-    "ghcr.io/devcontainers/features/github-cli:1": {}
+    "ghcr.io/devcontainers/features/github-cli:1": {} // Allows you to manage Actions & Render deploys
   },
   "customizations": {
     "vscode": {
       "extensions": [
-        "ritwickdey.LiveServer",         // For Sahana to test the UI
-        "ms-azuretools.vscode-docker",    // For inspecting images
-        "github.vscode-github-actions",   // For Wee Teck to debug the pipeline
-        "esbenp.prettier-vscode"          // Standardizes code formatting
+        "ritwickdey.LiveServer",           // For Sahana to test the UI logic
+        "esbenp.prettier-vscode",          // Standardizes code for the whole team
+        "github.vscode-github-actions",     // For monitoring Wee Teck's pipeline
+        "ms-azuretools.vscode-docker"       // To inspect production images
       ],
       "settings": {
         "editor.formatOnSave": true,
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "liveServer.settings.port": 5500
       }
     }
   },
-  "forwardPorts": [5500, 8080],
+  "forwardPorts": [5500],
   "portsAttributes": {
     "5500": {
       "label": "Game Preview (Live Server)",
       "onAutoForward": "openBrowser"
-    },
-    "8080": {
-      "label": "Production Build Test"
     }
   },
-  // Automatically installs dependencies and runs team tests on launch
-  "postCreateCommand": "npm install && npm test" 
+  // Automatically installs dependencies and runs logic tests by Li Xuan & Daniel on launch
+  "postCreateCommand": "npm install && npm test"
 }
