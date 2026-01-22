@@ -2,7 +2,8 @@
   "name": "Team 5 - Advanced Tic-Tac-Toe Dev",
   "image": "mcr.microsoft.com/devcontainers/javascript-node:20",
   "features": {
-    "ghcr.io/devcontainers/features/github-cli:1": {} // Allows you to manage Actions & Render deploys
+    "ghcr.io/devcontainers/features/github-cli:1": {},// Allows you to manage Actions & Render deploys
+    "ghcr.io/devcontainers/features/git-lfs:1": {}
   },
   "customizations": {
     "vscode": {
