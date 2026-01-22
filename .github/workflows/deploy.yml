@@ -1,0 +1,21 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ "main" ]  # Triggers whenever you push to main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Docker Build Test
+        run: docker build -t tic-tac-toe-test .
+
+      - name: Deploy to Render
+        # This uses the secret we will set up in the next step
+        run: |
+          curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}
