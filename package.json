@@ -1,0 +1,12 @@
+{
+  "name": "moving-tic-tac-toe",
+  "version": "1.0.0",
+  "description": "Moving Tic-Tac-Toe game logic and tests",
+  "main": "src/script.js",
+  "scripts": {
+    "test": "jest --runInBand"
+  },
+  "devDependencies": {
+    "jest": "^29.6.1"
+  }
+}
