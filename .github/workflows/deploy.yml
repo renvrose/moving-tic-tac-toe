@@ -22,8 +22,6 @@ jobs:
       - name: Install and Test
         run: |
           npm install
-          # Verify mocha exists to avoid 127 error
-          npx mocha --version
           npm test
 
       - name: Build Docker Image
