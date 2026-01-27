@@ -1,20 +1,19 @@
-# Use Node 20 slim for a smaller, faster image
+# Match your devcontainer for consistency
 FROM node:20-slim
 
-# Set the working directory
 WORKDIR /app
 
-# Copy package files first (helps with build speed)
+# Copy package files first to speed up the CI/CD build process
 COPY package*.json ./
 
-# Install the 'serve' package we added to package.json
-RUN npm install --production
+# Install all dependencies (including Jest for the test step in CI)
+RUN npm install
 
-# Copy all your game files (HTML, CSS, JS) into the container
+# Copy everything else (including your tests folder)
 COPY . .
 
-# Match the port from your devcontainer (5500)
+# Match the port in your GitHub Action / Devcontainer
 EXPOSE 5500
 
-# This matches the script we just added to package.json
+# This runs the 'start' script from the package.json above
 CMD ["npm", "start"]

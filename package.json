@@ -1,11 +1,14 @@
 {
   "name": "team-4-advanced-tic-tac-toe",
   "version": "1.0.0",
-  "description": "Advanced Tic-Tac-Toe Game",
+  "description": "Advanced Tic-Tac-Toe with CI/CD",
   "main": "index.html",
   "scripts": {
     "start": "npx serve -s . -l 5500",
-    "test": "echo \"No tests specified\" && exit 0"
+    "test": "jest"
+  },
+  "devDependencies": {
+    "jest": "^29.0.0"
   },
   "dependencies": {
     "serve": "^14.2.3"
