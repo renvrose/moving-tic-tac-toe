@@ -9,7 +9,7 @@ on:
 jobs:
   test-and-deploy:
     runs-on: ubuntu-latest
-    # Added permissions to allow pushing to GitHub Container Registry
+    # This allows GitHub to write the Docker image to your packages
     permissions:
       contents: read
       packages: write
@@ -24,8 +24,7 @@ jobs:
           node-version: '20'
 
       - name: Install Dependencies
-        run: |
-          npm ci
+        run: npm ci
 
       - name: Run Tests
         run: npm test
@@ -47,6 +46,7 @@ jobs:
           docker push $IMAGE_ID
 
       - name: Deploy to Render
+        # Only deploy if tests pass and we are on the main branch
         if: github.ref == 'refs/heads/main'
         run: |
-          curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}
+          curl -f -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}"
