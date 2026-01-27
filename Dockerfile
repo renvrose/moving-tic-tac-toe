@@ -7,7 +7,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install all dependencies (including Jest for the GitHub Action test step)
-RUN npm install
+RUN npm ci
 
 # Copy everything else (this includes your 'tests' folder and 'gamelogic.js')
 COPY . .
