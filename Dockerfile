@@ -6,14 +6,14 @@ WORKDIR /app
 # Copy package files first to speed up the CI/CD build process
 COPY package*.json ./
 
-# Install all dependencies (including Jest for the test step in CI)
+# Install all dependencies (including Jest for the GitHub Action test step)
 RUN npm install
 
-# Copy everything else (including your tests folder)
+# Copy everything else (this includes your 'tests' folder and 'gamelogic.js')
 COPY . .
 
-# Match the port in your GitHub Action / Devcontainer
+# Expose port 5500 to match your devcontainer/Render settings
 EXPOSE 5500
 
-# This runs the 'start' script from the package.json above
+# Runs the start script we just added to package.json
 CMD ["npm", "start"]
