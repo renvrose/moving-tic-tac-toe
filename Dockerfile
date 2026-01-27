@@ -1,19 +1,20 @@
-# Use the same version as your devcontainer for consistency
+# Use Node 20 slim for a smaller, faster image
 FROM node:20-slim
 
+# Set the working directory
 WORKDIR /app
 
-# Copy package files first to cache layers
+# Copy package files first (helps with build speed)
 COPY package*.json ./
 
-# Install production dependencies only
+# Install the 'serve' package we added to package.json
 RUN npm install --production
 
-# Copy the rest of the application code
+# Copy all your game files (HTML, CSS, JS) into the container
 COPY . .
 
-# Expose the port used by the app (matching Sahana's UI port)
+# Match the port from your devcontainer (5500)
 EXPOSE 5500
 
-# Command to run the game
+# This matches the script we just added to package.json
 CMD ["npm", "start"]
