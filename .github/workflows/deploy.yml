@@ -24,7 +24,17 @@ jobs:
           node-version: '20'
 
       - name: Install Dependencies
-        run: npm ci
+        run: |
+          npm ci
+          # Debug: show installed test binaries and permissions
+          echo "Checking test binaries..."
+          ls -la node_modules/.bin/ | head -10
+          if [ -f node_modules/.bin/jest ]; then
+            echo "Jest found:"
+            ls -la node_modules/.bin/jest
+          else
+            echo "Jest not found in node_modules/.bin/"
+          fi
 
       - name: Run Tests
         run: npm test
