@@ -1,5 +1,5 @@
 {
-  "name": "Team 5 - Advanced Tic-Tac-Toe Dev",
+  "name": "Team 4 - Advanced Tic-Tac-Toe Dev",
   "image": "mcr.microsoft.com/devcontainers/javascript-node:20",
   "features": {
     "ghcr.io/devcontainers/features/github-cli:1": {},

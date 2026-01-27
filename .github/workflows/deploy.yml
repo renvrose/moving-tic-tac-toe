@@ -2,12 +2,12 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
-  build-and-deploy:
+  test-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -17,20 +17,17 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: "20"
 
-      - name: Install and Test
-        # Validates Daniel and Li Xuan's logic before we build anything
-        run: |
-          npm install
-          npm test
+      - name: Install Dependencies
+        run: npm install
 
-      - name: Build Docker Image
-        # This confirms the Dockerfile you are working on is valid
-        run: docker build -t tic-tac-toe-team5 .
+      - name: Run Automated Tests
+        # Executes Daniel & Li Xuan's test cases
+        run: npm test
 
       - name: Deploy to Render
-        # Only triggers if the push is on the main branch
+        # Only runs if tests pass and branch is main
         if: github.ref == 'refs/heads/main'
         run: |
           curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}
