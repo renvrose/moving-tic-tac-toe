@@ -18,19 +18,22 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+          cache: 'npm'
 
-      - name: Install and Test
-        # Validates Daniel and Li Xuan's logic before we build anything
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Fix Permissions & Run Tests
+        # Fixes the 'jest: Permission denied' error automatically
         run: |
-          npm install
+          chmod +x node_modules/.bin/jest
           npm test
 
-      - name: Build Docker Image
-        # This confirms the Dockerfile you are working on is valid
+      - name: Docker Build Test
         run: docker build -t tic-tac-toe-team5 .
 
       - name: Deploy to Render
-        # Only triggers if the push is on the main branch
-        if: github.ref == 'refs/heads/main'
+        # Only triggers when code is merged into main
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: |
           curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}
