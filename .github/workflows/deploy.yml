@@ -20,10 +20,10 @@ jobs:
           node-version: '20'
 
       - name: Install and Test
-  run: |
-    node -v
-    npm -v
-    npm ci
+        run: |
+          node -v
+          npm -v
+          npm ci
           # Debug: show installed test binaries and permissions (remove after verified)
           ls -la node_modules/.bin || true
           if [ -f node_modules/.bin/jest ]; then ls -la node_modules/.bin/jest; fi
@@ -31,5 +31,4 @@ jobs:
       - name: Deploy to Render
         if: github.ref == 'refs/heads/main'
         run: |
-          # Fixed the closing brace for the curl command
           curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}
