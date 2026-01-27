@@ -5,10 +5,11 @@
   "main": "index.html",
   "scripts": {
     "start": "npx serve -s . -l 5500",
-    "test": "npx jest"
+    "test": "npx mocha tests/**/*.test.js"
   },
   "devDependencies": {
-    "jest": "^29.7.0"
+    "mocha": "^10.2.0",
+    "chai": "^4.3.10" 
   },
   "dependencies": {
     "serve": "^14.2.3"
