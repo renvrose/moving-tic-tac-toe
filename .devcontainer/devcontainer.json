@@ -2,16 +2,16 @@
   "name": "Team 5 - Advanced Tic-Tac-Toe Dev",
   "image": "mcr.microsoft.com/devcontainers/javascript-node:20",
   "features": {
-    "ghcr.io/devcontainers/features/github-cli:1": {},// Allows you to manage Actions & Render deploys
+    "ghcr.io/devcontainers/features/github-cli:1": {},
     "ghcr.io/devcontainers/features/git-lfs:1": {}
   },
   "customizations": {
     "vscode": {
       "extensions": [
-        "ritwickdey.LiveServer",           // For Sahana to test the UI logic
-        "esbenp.prettier-vscode",          // Standardizes code for the whole team
-        "github.vscode-github-actions",     // For monitoring Wee Teck's pipeline
-        "ms-azuretools.vscode-docker"       // To inspect production images
+        "ritwickdey.LiveServer",
+        "esbenp.prettier-vscode",
+        "github.vscode-github-actions",
+        "ms-azuretools.vscode-docker"
       ],
       "settings": {
         "editor.formatOnSave": true,
@@ -27,6 +27,6 @@
       "onAutoForward": "openBrowser"
     }
   },
-  // Automatically installs dependencies and runs logic tests by Li Xuan & Daniel on launch
-  "postCreateCommand": "npm install && npm test"
+  "postCreateCommand": "npm install && npm test",
+  "remoteUser": "node"
 }
