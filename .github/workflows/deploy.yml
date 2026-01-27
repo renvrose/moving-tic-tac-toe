@@ -9,10 +9,6 @@ on:
 jobs:
   test-and-deploy:
     runs-on: ubuntu-latest
-    # This allows GitHub to write the Docker image
-    permissions:
-      contents: read
-      packages: write
 
     steps:
       - name: Checkout Code
@@ -24,43 +20,12 @@ jobs:
           node-version: '20'
 
       - name: Install Dependencies
-        run: |
-          npm ci
-          # Debug: show installed test binaries and permissions
-          echo "Checking test binaries..."
-          ls -la node_modules/.bin/ | head -10
-          if [ -f node_modules/.bin/jest ]; then
-            echo "Jest found:"
-            ls -la node_modules/.bin/jest
-          else
-            echo "Jest not found in node_modules/.bin/"
-          fi
+        run: npm ci
 
       - name: Run Tests
         run: npm test
 
-      - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build and Push Docker Image
-        continue-on-error: true  # Don't fail the entire workflow if Docker build fails
-        run: |
-          # Convert repository name to lowercase for Docker naming rules
-          IMAGE_ID=ghcr.io/${{ github.repository_owner }}/tic-tac-toe:latest
-          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
-          
-          echo "Building Docker image: $IMAGE_ID"
-          docker build -t $IMAGE_ID .
-          echo "Pushing Docker image..."
-          docker push $IMAGE_ID
-          echo "Docker build and push completed"
-
       - name: Deploy to Render
-        # Only deploy if tests pass and we are on the main branch
         if: github.ref == 'refs/heads/main'
         run: |
           curl -f -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}"
