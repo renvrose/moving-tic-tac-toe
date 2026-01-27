@@ -19,7 +19,7 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install and Test
+      - name: Install Dependencies
         run: |
           node -v
           npm -v
@@ -28,6 +28,9 @@ jobs:
           ls -la node_modules/.bin || true
           if [ -f node_modules/.bin/jest ]; then ls -la node_modules/.bin/jest; fi
           if [ -f node_modules/.bin/mocha ]; then ls -la node_modules/.bin/mocha; fi
+
+      - name: Run Tests
+        run: npm test
       - name: Deploy to Render
         if: github.ref == 'refs/heads/main'
         run: |
