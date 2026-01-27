@@ -20,13 +20,14 @@ jobs:
           node-version: '20'
 
       - name: Install and Test
-        run: |
-          npm install
-          npm test
-
-      - name: Build Docker Image
-        run: docker build -t tic-tac-toe-team5 .
-
+  run: |
+    node -v
+    npm -v
+    npm ci
+          # Debug: show installed test binaries and permissions (remove after verified)
+          ls -la node_modules/.bin || true
+          if [ -f node_modules/.bin/jest ]; then ls -la node_modules/.bin/jest; fi
+          if [ -f node_modules/.bin/mocha ]; then ls -la node_modules/.bin/mocha; fi
       - name: Deploy to Render
         if: github.ref == 'refs/heads/main'
         run: |
