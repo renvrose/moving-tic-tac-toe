@@ -4,13 +4,27 @@
   "description": "Advanced Tic-Tac-Toe with CI/CD",
   "main": "index.html",
   "scripts": {
-    "start": "npx serve -s . -l 5500",
-    "test": "npx jest"
+    "start": "serve -s . -l 5500",
+    "test": "jest"
   },
   "devDependencies": {
     "jest": "^29.7.0"
   },
   "dependencies": {
     "serve": "^14.2.3"
-  }
+  },
+  "directories": {
+    "test": "tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/renvrose/moving-tic-tac-toe.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/renvrose/moving-tic-tac-toe/issues"
+  },
+  "homepage": "https://github.com/renvrose/moving-tic-tac-toe#readme"
 }
