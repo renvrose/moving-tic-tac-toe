@@ -2,7 +2,7 @@
 
  
 📌 Description
-Advanced Moving Tic-Tac-Toe is a modern, web-based strategy game that evolves the classic formula. Once players reach their piece limit, the game enters a Movement Phase, requiring players to slide pieces into adjacent or diagonal slots to win.
+Advanced Moving Tic-Tac-Toe is a modern, web-based strategy game that evolves the classic formula. Once players reach their piece limit, the game enters a Movement Phase, during which players slide pieces into adjacent or diagonal slots to win.
 
 This project demonstrates a full DevOps Lifecycle, featuring a high-speed CI/CD pipeline managed via GitHub Actions and containerized with Docker for seamless deployment to Render.
 
@@ -64,7 +64,8 @@ cd moving-tic-tac-toe
 Alternatively, simply open index.html in any modern browser.
 
 👥 Team Contributions
-Version 1.0 , Troubleshooting Overall App: Sahana   ( Team Leader)
+
+Version 1.0, Troubleshooting Overall App: Sahana   ( Team Leader)
 
 Test Cases: Li Xuan & Daniel
 
@@ -72,5 +73,5 @@ CI/CD Pipeline (GitHub Actions): Wee Teck
 
 Docker (Git Hub Codespaces) & Docker Render Environment: Sean
 
+Version 2.0 App: Xin Ru
 
-Version 2.0 App : Xin Ru
