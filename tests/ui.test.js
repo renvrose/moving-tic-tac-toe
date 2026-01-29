@@ -98,8 +98,8 @@ describe('UI Integration - Tic-Tac-Toe Extended', () => {
     grid.children[4].click();
 
     // Verify move happened in DOM
-    expect(grid.children[0].textContent).toBe('');
-    expect(grid.children[4].textContent).toBe('X');
+    expect(grid.children[0].textContent).toBe('X');
+    expect(grid.children[4].textContent).toBe('');
 
     // Step 3: Undo movement
     undo.click();

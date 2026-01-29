@@ -1,3 +1,5 @@
+/** Done by Li Xuan */
+
 const { getAdjacency, checkWin, hasValidMove, countPieces, isValidMove } = require('../src/gameLogic.js');
 
 describe('Game Logic - Adjacency', () => {

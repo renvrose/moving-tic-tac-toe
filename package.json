@@ -1,5 +1,5 @@
 {
-  "name": "team-4-advanced-tic-tac-toe",
+  "name": "team-2-advanced-tic-tac-toe",
   "version": "1.0.0",
   "description": "Advanced Tic-Tac-Toe with CI/CD",
   "main": "index.html",
@@ -13,6 +13,9 @@
   },
   "dependencies": {
     "serve": "^14.2.3"
+  },
+  "jest": {
+    "testEnvironment": "jsdom"
   },
   "directories": {
     "test": "tests"
