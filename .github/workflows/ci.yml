@@ -18,14 +18,33 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+          cache: 'npm'            # speeds up installs
 
       - name: Install Dependencies
         run: npm ci
+
+      - name: Show env (debug)
+        run: |
+          node -v
+          npm -v
+          echo "PATH=$PATH"
+          ls -la
+          cat package.json
+
+      - name: Verify test runner (debug)
+        run: |
+          npx --yes which jest || true
+          npx --yes jest --version || true
 
       - name: Run Tests
         run: npm test
 
       - name: Deploy to Render
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main' && success()
+        env:
+          RENDER_DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK }}
         run: |
-          curl -f -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}"
+          set -euxo pipefail
+          test -n "$RENDER_DEPLOY_HOOK"  # fail early if missing
+          which curl
+          curl -f -X POST "$RENDER_DEPLOY_HOOK"
