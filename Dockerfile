@@ -3,17 +3,23 @@ FROM node:20-slim
 
 WORKDIR /app
 
-# Copy package files first to speed up the CI/CD build process
+# Copy package files first
 COPY package*.json ./
 
-# Install all dependencies (including Jest for the GitHub Action test step)
+# Install dependencies
 RUN npm ci
 
-# Copy everything else (this includes your 'tests' folder and 'gamelogic.js')
+# Copy everything else
 COPY . .
 
-# Expose port 5500 to match your devcontainer/Render settings
+# FIX: Ensure the node user owns the files and they are executable
+RUN chown -R node:node /app && chmod -R 755 /app
+
+# Switch to non-root user for security (standard practice)
+USER node
+
+# Expose port 5500
 EXPOSE 5500
 
-# Runs the start script we just added to package.json
+# Use the 'npx' version we fixed in package.json
 CMD ["npm", "start"]

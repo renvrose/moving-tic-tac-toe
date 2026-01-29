@@ -4,7 +4,7 @@
   "description": "Advanced Tic-Tac-Toe with CI/CD",
   "main": "index.html",
   "scripts": {
-    "start": "serve -s . -l 5500",
+    "start": "npx serve -s . -l $PORT",
     "test": "jest"
   },
   "devDependencies": {
