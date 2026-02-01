@@ -27,6 +27,42 @@ document.addEventListener("DOMContentLoaded", () => {
   let playerXName = localStorage.getItem("playerXName") || "Player X";
   let playerOName = localStorage.getItem("playerOName") || "Player O";
 
+  let turnTime = 30;
+let timeLeft = 30;
+let timer = null;
+
+const timerDisplay = document.getElementById("timerDisplay");
+const playerLabel = document.getElementById("currentPlayerLabel");
+const timeSelect = document.getElementById("turnTimeSelect");
+
+  function startTurnTimer() {
+  clearInterval(timer);
+  timeLeft = turnTime;
+  updateTimerUI();
+
+  timer = setInterval(() => {
+    timeLeft--;
+    updateTimerUI();
+    if (timeLeft === 0) handleTimeout();
+  }, 1000);
+}
+
+function handleTimeout() {
+  clearInterval(timer);
+  status.textContent = "⏰ Time's up!";
+  currentPlayer = currentPlayer === "X" ? "O" : "X";
+  startTurnTimer();
+  updateStatusMessage();
+  startTurnTimer();
+}
+
+function updateTimerUI() {
+  if (!timerDisplay || !playerLabel) return;
+  timerDisplay.textContent = timeLeft;
+  playerLabel.textContent =
+    `${currentPlayer === "X" ? playerXName : playerOName}'s turn`;
+}
+
   if (playerXInput) playerXInput.value = playerXName;
   if (playerOInput) playerOInput.value = playerOName;
   if (game) game.style.display = "none";
@@ -106,6 +142,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function endTurn() {
     const winPattern = checkWin();
+    clearInterval(timer);
 
     if (winPattern) {
       winningCells = winPattern;
@@ -252,6 +289,10 @@ document.addEventListener("DOMContentLoaded", () => {
       setup.style.display = "none";
       game.style.display = "block";
       resetGame();
+      startTurnTimer();
+      turnTime = timeSelect ? +timeSelect.value : 30;
+      startTurnTimer();
+      
     };
   }
 });
