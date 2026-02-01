@@ -1,25 +1,26 @@
-# Match your devcontainer for consistency
+# 1. Use the slim image
 FROM node:20-slim
 
+# 2. Set the working directory
 WORKDIR /app
 
-# Copy package files first
-COPY package*.json ./
+# 3. INSTALL SERVE FIRST - This will now be cached forever
+# Unless you change this line, Docker will never run this again.
+RUN npm install -g serve
 
-# Install dependencies
+# 4. Copy ONLY package files
+# This allows Docker to cache your 'npm ci' step.
+COPY package*.json ./
 RUN npm ci
 
-# Copy everything else
+# 5. Copy the rest of your code
+# This is the only step that will run when you change your HTML/JS.
 COPY . .
 
-# FIX: Ensure the node user owns the files and they are executable
+# 6. Permissions and User
 RUN chown -R node:node /app && chmod -R 755 /app
-
-# Switch to non-root user for security (standard practice)
 USER node
 
-# Expose port 5500
-EXPOSE 5500
-
-# Use the 'npx' version we fixed in package.json
-CMD ["npm", "start"]
+# 7. Use the absolute path to the global serve binary
+ENV PORT=5500
+CMD ["/usr/local/bin/serve", "-s", ".", "-l", "5500"]
